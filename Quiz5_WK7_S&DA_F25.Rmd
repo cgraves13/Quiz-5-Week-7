@@ -1,0 +1,124 @@
+
+---
+title: "WK7 Quiz"
+course: Statistics & Data Analysis
+output: html_document
+Name: Chantell Graves
+---
+
+Submission Format: Knit completed quiz to an HTML & upload via Canvas
+
+## Scenario: CivicData - City Insights Lab
+
+CivicData is a fictional analytics team working with several cities to monitor resident services, infrastructure efficiency, and response times. You have joined as a junior data consultant and have been asked to support ongoing work in three areas: housing inspections, bus wait times, and emergency service response.
+
+Throughout the quiz, fill in the missing R code to complete simulations, summarize data, or visualize distributions. All code blocks require completion and interpretation. Run each of the code blocks upon completion.
+
+---
+
+### Question 1: Discrete vs. Continuous Data Types
+
+The team collected the following information in the city of Kentmere:
+
+- `inspections_completed`: number of housing inspections conducted each day (e.g., 12, 15, 17)
+- `avg_wait_time`: average bus wait time at city stops in minutes (e.g., 4.2, 5.6, 6.1)
+
+Identify which variable is discrete and which is continuous. Explain why classification matters when selecting probability distributions. Answer below:
+
+#The discrete variable is the number of inspections completed each day because it includes countable, finite values. The continuous variable is average wait time in minutes because the values are decimals, where there are perhaps infinite values in-between depending on how many decimal places are included. These values are not finite or countable, making them continuous.
+
+
+Complete the code block to define sample vectors:
+
+```{r}
+inspections_completed <- c(12, 14, 13, 15, 16, 17)
+avg_wait_time <- c(5.2, 4.8, 5.9, 6.3, 7.6, 8.2)
+```
+
+
+### Question 2: Simulating Discrete Events (Poisson)
+
+The city of Auburn records the number of emergency calls received per hour. Historically, the average is 8 calls/hour. You are tasked with simulating this over 100 hours.
+
+Complete the code to generate the distribution and summarize it:
+
+```{r}
+set.seed(101)
+emergency_calls <- rpois(n = 100, lambda = 8)
+table(emergency_calls)
+```
+
+What is the most common call count observed? How does this relate to the shape of a Poisson distribution? Answer below:
+
+
+#The most common call count observed is a tie between 7 calls/hour and 9 calls per hour, each were observed 16 times. This makes sense because the mean value is 8 calls/hour in this example, and the most common call counts (or mode) will influence the mean. For the Poisson distribution, this means that the majority of data are grouped around the numbers 7-9, which is where the "peak" would appear in the Poisson distribution. The skew of a Poisson distribution changes depending on which value(s) contain the majority of data points.
+
+
+### Question 3: Modeling Continuous Wait Times
+
+You are asked to model bus stop wait times in the city of Larkpoint. Prior studies show that wait times follow a normal distribution with a mean of 6 minutes and a standard deviation of 1.2 minutes.
+
+Complete the code to simulate and analyze 500 random wait times:
+
+```{r}
+set.seed(202)
+wait_times <- rnorm(n = 500, mean = 6, sd = 1.2)
+summary(wait_times)
+```
+  
+Estimate the probability a rider waits more than 8 minutes. (Hint: Use `mean(wait_times > 8)`.) Answer below:
+
+```{r}
+mean(wait_times > 8)
+```
+#The probability that a rider waits moer than 8 minutes is 0.048, or 4.8%. Therefore it is not very likely that a rider would wait more than 8 minutes for the bus. Since the mean in this example is 6, it is much more likely that a rider would wait about 6 minutes for any bus.
+
+
+### Question 4: Sampling Method Justification
+
+The city of Norford is evaluating resident satisfaction by neighborhood income tier: low, middle, and high. Each tier has different population sizes.
+
+Which sampling method would ensure all three income tiers are proportionally represented? Explain why your choice is appropriate. Answer below:
+
+#In this example, I would choose the stratified sampling method. Each income tier (low, middle, and high) would represent one "stratum", or group. Then from each group I would select a fixed proportion from each group, like 70% from each group. This ensures that even though each group has a different population size (300, 500, 200) the data collected will be comparable because it is proportional.
+
+Complete the code structure for defining strata and generating a proportional sample:
+
+```{r}
+residents <- data.frame(
+  income_tier = rep(c("Low", "Middle", "High"), times = c(300, 500, 200)),
+  rating = sample(1:5, size = 1000, replace = TRUE)
+)
+
+library(dplyr)
+stratified_sample <- residents %>%
+  group_by(income_tier) %>%
+  sample_frac(0.7)
+```
+
+
+### Question 5: Visualizing Distributions
+
+The city of Bellacre wants to understand how water usage varies across homes. You collected water usage data (in gallons/day) for 1,000 homes.
+
+Simulate this data using a normal distribution with mean = 180 and sd = 30, then plot a histogram and overlay a density line.
+
+Complete the code below:
+
+```{r}
+set.seed(303)
+water_use <- rnorm(n = 1000, mean = 180, sd = 30)
+
+library(ggplot2)
+ggplot(data.frame(water_use), aes(x = water_use)) +
+  geom_histogram(binwidth = 5, fill = "steelblue", color = "white", aes(y = ..density..)) +
+  geom_density(color="red", size = 1)
+  theme_minimal()
+```
+
+ 
+What does the shape of the distribution suggest? Is it symmetric, skewed, or irregular? Answer below:
+
+#The shape of the distribution looks like a normal bell curve. It is not skewed or irregular, it is symmetric. Since this is a normal distribution, most of the values are near the mean. While there are outliers, they are rare. I can see from the histogram that of the 1,000 homes in Bellacre surveyed for their water usage data, the majority of homes used between about 170 gallons/day and 200 gallons/day where the data "peaks" in the distribution.
+
+---
